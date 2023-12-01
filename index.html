@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Σύστημα καταμέτρησης εκλογικών αποτελεσμάτων - ΣΥΡΙΖΑ">
+    <meta name="author" content="Δημήτρης Βαϊνανίδης">
+    <title>Υπολογιστής Σύνταξης</title>
+
+    <link href="/favicon.png" rel="shortcut icon">
+    <meta name="theme-color" content="purple">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="/style.css" rel="stylesheet" media="screen">
+
+
+    <!-- <script defer src="/resources/script.js?v2.1"></script> -->
+    <script defer src="/dim.js"></script>
+    <script defer src="/finance.js"></script>
+    <script defer src="/calc.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+
+  </head>
+
+
+
+
+  <body>
+
+
+    <div class="body-container">
+
+    <header id="app-header">
+        <h1>Υπολογιστής Σύνταξης</h1>
+    </header>
+
+
+
+
+    <main>
+
+
+    <div x-data="{
+        nominal: 6,
+        inflation: 2,
+        interest: function(){
+            return finance.fisherReal(this.nominal,this.inflation);
+        },
+        interestShow : function(){
+            return percent(this.interest());
+        },
+        monthlyInterest: function(){
+            return finance.nominal(this.interest(),12)/12;
+        },
+        presentValue: 0,
+        years: 30,
+        monthlySavings: 100,
+        yearlySavings: function(){
+            return this.monthlySavings * 12;
+        },
+        totalSavings: function(){
+            return euro(this.yearlySavings()*this.years);
+        },
+        futureValue: function(){
+            return -finance.FV( this.monthlyInterest() , 12*this.years , this.monthlySavings , this.presentValue );
+        },
+        futureValueShow: function(){
+            return euro(this.futureValue());
+        },
+        totalExpenses: 1000,
+        pension: 600,
+        expenses: function(){
+            return this.totalExpenses-this.pension;
+        },
+        monthsCovered: function(){
+            return finance.nper( this.monthlyInterest() , this.expenses() , -this.futureValue()  );
+        },
+        coveredPeriod: function(){
+            return periodDescription(this.monthsCovered());
+        },
+    }" >
+
+        <h2>Επιτόκιο</h2>
+        <div class="form-floating ">
+            <input x-model="nominal" type="number" class="form-control" id="nominal" min="0" max="20">
+            <label for="nominal">Μέσο επιτόκιο %</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="inflation" type="number" class="form-control" id="inflation" min="0" max="8" step="0.1">
+            <label for="inflation">Μέσος πληθωρισμός %</label>
+        </div>
+        <div class="form-floating">
+            <input x-model="percent(interest())" type="text" class="form-control" id="interestShow" disabled>
+            <label for="interestShow">Μέσο πραγματικό επιτόκιο</label>
+        </div>
+
+        
+        <hr>
+
+        <h2>Αποταμίευση</h2>
+        <div class="form-floating ">
+            <input x-model="presentValue" type="number" class="form-control" id="presentValue" min="0" step="500">
+            <label for="presentValue">Τρέχον αποθηκευμένο ποσό σε €</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="years" type="numbers" class="form-control" id="years" min="0" max="50">
+            <label for="years">Έτη αποταμίευσης</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="monthlySavings" type="number" class="form-control" id="monthlySavings" min="0" step="20">
+            <label for="monthlySavings">Μηνιαίο ποσό αποταμίευσης σε €</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="yearlySavings" type="text" class="form-control" id="yearlySavings" disabled>
+            <label for="yearlySavings">Ετήσιο ποσό αποταμίευσης σε €</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="totalSavings" type="text" class="form-control" id="totalSavings" disabled>
+            <label for="totalSavings">Συνολικό ποσό αποτεμίευσης (χωρίς τόκους)</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValueShow" disabled>
+            <label for="futureValueShow">Τελικό ποσό που θα έχει συσσωρευθεί</label>
+        </div>
+
+
+
+        <hr>
+        <h2>Κατανάλωση</h2>
+        <div class="form-floating ">
+            <input x-model="totalExpenses" type="number" class="form-control" id="totalExpenses" min="0" step="20">
+            <label for="totalExpenses">Μηνιαία έξοδα σε € που θα απαιτούνται κατά την περίοδο συνταξιοδότησης</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="pension" type="number" class="form-control" id="pension" min="0" step="20">
+            <label for="pension">Μηνιαία κρατική σύνταξη σε €</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="euro(expenses())" type="text" class="form-control" id="expenses" disabled>
+            <label for="expenses">Ποσό που θα καταναλώνεται από το πλάνο</label>
+        </div>
+        <div class="form-floating ">
+            <input x-model="coveredPeriod" type="text" class="form-control" id="coveredPeriod" disabled>
+            <label for="coveredPeriod">Περίοδος κάλυψης</label>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <hr>
+
+
+    </main>
+
+
+
+    <footer>
+
+    </footer>
+
+
+
+
+
+
+    </div>
+  </body>
+</html>
