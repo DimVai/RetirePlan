@@ -7,7 +7,7 @@ var finance = new Finance();
 function percent(number,decimals=2) {
     return (number * 100).toFixed(decimals) + '%';
 }
-function decimal(number,decimals=1) {
+function decimal(number,decimals=0) {
     return number.toFixed(decimals);
 }
 

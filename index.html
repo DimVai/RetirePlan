@@ -48,9 +48,6 @@
         interest: function(){
             return finance.fisherReal(this.nominal,this.inflation);
         },
-        interestShow : function(){
-            return percent(this.interest());
-        },
         monthlyInterest: function(){
             return finance.nominal(this.interest(),12)/12;
         },
@@ -66,18 +63,18 @@
         futureValue: function(){
             return -finance.FV( this.monthlyInterest() , 12*this.years , this.monthlySavings , this.presentValue );
         },
-        futureValueShow: function(){
-            return euro(this.futureValue());
-        },
         totalNominalExpenses: 1000,
+        inflationFactor: function(){
+            return Math.pow(1+this.inflation/100,this.years);
+        },
         totalExpenses: function(){
             if(this.useInflation){
-                return this.totalNominalExpenses * Math.pow(1+this.inflation/100,this.years);
+                return Math.ceil(this.totalNominalExpenses * this.inflationFactor());
             }else{
                 return this.totalNominalExpenses;
             }
         },
-        pension: 600,
+        pension: 700,
         expenses: function(){
             return this.totalExpenses()-this.pension;
         },
@@ -97,7 +94,16 @@
         </div>
         <div class="form-check">
             <input x-model.boolean="useInflation" class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
-                @change="if (useInflation) { inflation = 2; nominal+=2 } else { inflation = 0;nominal-=2 }"
+                @change="if (useInflation) { 
+                        inflation = 2; 
+                        totalNominalExpenses=800;
+                        nominal+=2;
+                    } 
+                    else { 
+                        totalNominalExpenses=1000;
+                        inflation = 0;
+                        nominal-=2;
+                    }"
             >
             <label class="form-check-label" for="flexCheckDefault">
                 Χρήση πληθωρισμού στους υπολογισμούς
@@ -152,7 +158,7 @@
             <label for="totalNominalExpenses">Μηνιαία έξοδα σε € κατά την περίοδο συνταξιοδότησης <span x-show="useInflation">(σε € με σημερινή αξία)</span></label>
         </div>
         <div x-cloak x-show="useInflation" class="form-floating" >
-            <input x-model="decimal(totalExpenses(),0)" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
+            <input x-model="Math.ceil(totalExpenses())" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
             <label for="totalExpenses">Μηνιαία έξοδα κατά την περίοδο συνταξιοδότησης <span x-show="useInflation">(σε € με μελλοντική αξία)</span></label>
         </div>
         <div class="form-floating">
