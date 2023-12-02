@@ -45,19 +45,38 @@ function nper(rate,pmt,pv,fv=0,type=0) {
     pv = parseFloat(pv);
     fv = parseFloat(fv);
     type = parseInt(type);
+    // αν type==0, τότε fv=pmt((1+rate)^nper-1)/rate => nper = log(fv*rate/pmt+1) με βάση (1+rate)
+    // ο παρακάτω τύπος δεν έχει ελεγχθεί για type==1
     let nper = Math.log((pmt*(1+rate*type)-fv*rate)/(pv*rate+pmt*(1+rate*type)))/Math.log(1+rate);
-    return isNaN(nper) ? "Infinity": Math.floor(nper);
+    // return nper;
+    // console.log(nper);
+    return (isNaN(nper)) ? "Infinity" : (nper<0) ? Math.ceil(nper) : Math.floor(nper);
 }
 finance.nper = nper;
 
 function periodDescription(months){
+    if (months=="Infinity") {return "Για πάντα"};
     months = parseInt(months);
-    console.log(months);
-    if (isNaN(months)) {return "Για πάντα"};
+    // console.log(months);
     let years = Math.floor(months/12);
     let monthsLeft = months - years*12;
     let description = "";
     if (years>0) description += years + " έτη";
     if (monthsLeft>0) description += " και " + monthsLeft + " μήνες";
     return description;
+}
+
+function amountByPeriod(rate,nper,pmt,pv=0,type=0){
+    rate = parseFloat(rate);
+    nper = parseInt(nper);
+    pmt = parseFloat(pmt);
+    pv = parseFloat(pv);
+    type = parseInt(type);
+    let amounts = [];
+
+    for (let i=1; i<=nper; i++){
+        amounts[i] = euro(Math.abs(finance.FV(rate,i,pmt,pv,type)));
+    }
+
+    return amounts;
 }

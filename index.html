@@ -42,8 +42,8 @@
 
 
     <div x-data="{
-        nominal: 6,
-        inflation: 2,
+        nominal: 4,
+        inflation: 0,
         interest: function(){
             return finance.fisherReal(this.nominal,this.inflation);
         },
@@ -84,16 +84,16 @@
         <h2>Επιτόκιο</h2>
         <div class="form-floating ">
             <input x-model="nominal" type="number" class="form-control" id="nominal" min="0" max="20">
-            <label for="nominal">Μέσο επιτόκιο %</label>
+            <label for="nominal">Υπολογιζόμενο μέσο επιτόκιο %</label>
         </div>
-        <div class="form-floating ">
+        <!-- <div class="form-floating ">
             <input x-model="inflation" type="number" class="form-control" id="inflation" min="0" max="8" step="0.1">
             <label for="inflation">Μέσος πληθωρισμός %</label>
         </div>
         <div class="form-floating">
             <input x-model="percent(interest())" type="text" class="form-control" id="interestShow" disabled>
             <label for="interestShow">Μέσο πραγματικό επιτόκιο</label>
-        </div>
+        </div> -->
 
         
         <hr>
@@ -101,10 +101,10 @@
         <h2>Αποταμίευση</h2>
         <div class="form-floating ">
             <input x-model="presentValue" type="number" class="form-control" id="presentValue" min="0" step="500">
-            <label for="presentValue">Τρέχον αποθηκευμένο ποσό σε €</label>
+            <label for="presentValue">Διαθέσιμο ποσό σε € σήμερα</label>
         </div>
         <div class="form-floating ">
-            <input x-model="years" type="numbers" class="form-control" id="years" min="0" max="50">
+            <input x-model="years" type="number" class="form-control" id="years" min="0" max="50">
             <label for="years">Έτη αποταμίευσης</label>
         </div>
         <div class="form-floating ">
@@ -117,7 +117,7 @@
         </div>
         <div class="form-floating ">
             <input x-model="totalSavings" type="text" class="form-control" id="totalSavings" disabled>
-            <label for="totalSavings">Συνολικό ποσό αποτεμίευσης (χωρίς τόκους)</label>
+            <label for="totalSavings">Συνολικό ποσό αποταμίευσης (χωρίς τόκους)</label>
         </div>
         <div class="form-floating ">
             <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValueShow" disabled>
