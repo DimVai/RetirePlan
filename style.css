@@ -400,3 +400,5 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
 .form-floating{
     margin-block: 1rem;
 }
+
+[x-cloak] { display: none !important }

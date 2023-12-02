@@ -47,9 +47,14 @@ function nper(rate,pmt,pv,fv=0,type=0) {
     type = parseInt(type);
     // αν type==0, τότε fv=pmt((1+rate)^nper-1)/rate => nper = log(fv*rate/pmt+1) με βάση (1+rate)
     // ο παρακάτω τύπος δεν έχει ελεγχθεί για type==1
-    let nper = Math.log((pmt*(1+rate*type)-fv*rate)/(pv*rate+pmt*(1+rate*type)))/Math.log(1+rate);
+    let nper;
+    if (rate==0) {
+        nper = (fv-pv)/pmt
+    }
+    else {
+        nper = Math.log((pmt*(1+rate*type)-fv*rate)/(pv*rate+pmt*(1+rate*type)))/Math.log(1+rate)
+    }
     // return nper;
-    // console.log(nper);
     return (isNaN(nper)) ? "Infinity" : (nper<0) ? Math.ceil(nper) : Math.floor(nper);
 }
 finance.nper = nper;
@@ -61,8 +66,11 @@ function periodDescription(months){
     let years = Math.floor(months/12);
     let monthsLeft = months - years*12;
     let description = "";
-    if (years>0) description += years + " έτη";
-    if (monthsLeft>0) description += " και " + monthsLeft + " μήνες";
+    if (years==1) description += years + " έτος";
+    if (years>1) description += years + " έτη";
+    if (years>0 && monthsLeft>0) description += " και ";
+    if (monthsLeft==1) description += monthsLeft + " μήνας";
+    if (monthsLeft>1) description += monthsLeft + " μήνες";
     return description;
 }
 
