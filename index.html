@@ -43,14 +43,19 @@
 
     <div x-data="{
         useInflation: false,
-        nominal: 4,
+        nominalInterest: 4,
         inflation: 0,
-        interest: function(){
-            return finance.fisherReal(this.nominal,this.inflation);
+
+        realInterest: function(){
+            return finance.fisherReal(this.nominalInterest,this.inflation);
         },
-        monthlyInterest: function(){
-            return finance.nominal(this.interest(),12)/12;
+        monthlyNominalInterest: function(){
+            return finance.nominal(this.nominalInterest/100,12)/12;
         },
+        monthlyRealInterest: function(){
+            return finance.nominal(this.realInterest()/100,12)/12;
+        },
+
         presentValue: 0,
         years: 30,
         monthlySavings: 150,
@@ -60,26 +65,31 @@
         totalSavings: function(){
             return euro(this.yearlySavings()*this.years);
         },
-        futureValue: function(){
-            return -finance.FV( this.monthlyInterest() , 12*this.years , this.monthlySavings , this.presentValue );
+
+        futureCapital: function(){
+            return -finance.FV( this.monthlyNominalInterest() , 12*this.years , this.monthlySavings , this.presentValue );
         },
-        totalNominalExpenses: 1200,
         inflationFactor: function(){
             return Math.pow(1+this.inflation/100,this.years);
         },
+        futureValue: function(){
+            return this.futureCapital()/this.inflationFactor();
+        },
+
+        totalNominalExpenses: 1200,
         totalExpenses: function(){
-            if(this.useInflation){
+            // if(this.useInflation){
                 return Math.ceil(this.totalNominalExpenses * this.inflationFactor());
-            }else{
-                return this.totalNominalExpenses;
-            }
+            // }else{
+                // return this.totalNominalExpenses;
+            // }
         },
         pension: 700,
         expenses: function(){
             return this.totalExpenses()-this.pension;
         },
         monthsCovered: function(){
-            return finance.nper( this.monthlyInterest() , this.expenses() , -this.futureValue()  );
+            return finance.nper( this.monthlyNominalInterest() , this.expenses() , -this.futureCapital()  );
         },
         coveredPeriod: function(){
             return periodDescription(this.monthsCovered());
@@ -89,20 +99,20 @@
         <h2>Επιτόκιο</h2>
 
         <div class="form-floating">
-            <input x-model.number="nominal" type="number" class="form-control" id="nominal" min="0" max="20" step="0.5">
-            <label for="nominal">Εκτιμώμενο μέσο επιτόκιο %</label>
+            <input x-model.number="nominalInterest" type="number" class="form-control" id="nominalInterest" min="0" max="20" step="0.5">
+            <label for="nominalInterest">Εκτιμώμενο μέσο επιτόκιο %</label>
         </div>
         <div class="form-check">
             <input x-model.boolean="useInflation" class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
                 @change="if (useInflation) { 
                         inflation = 2; 
                         totalNominalExpenses=700;
-                        nominal+=2;
+                        /*nominal+=2;*/
                     } 
                     else { 
                         totalNominalExpenses=1200;
                         inflation = 0;
-                        nominal-=2;
+                        /*nominal-=2;*/
                     }"
             >
             <label class="form-check-label" for="flexCheckDefault">
@@ -115,8 +125,8 @@
                 <label for="inflation">Εκτιμώμενος μέσος πληθωρισμός %</label>
             </div>
             <div class="form-floating">
-                <input x-model="percent(interest())" type="text" class="form-control" id="interestShow" disabled>
-                <label for="interestShow">Εκτιμώμενο μέσο πραγματικό επιτόκιο</label>
+                <input x-model="percent(realInterest())" type="text" class="form-control" id="realInterest" disabled>
+                <label for="realInterest">Εκτιμώμενο μέσο πραγματικό επιτόκιο</label>
             </div>
         </div>
 
@@ -143,30 +153,33 @@
             </div>
         </div>
 
-        <div class="form-floating">
+        <!-- <div class="form-floating">
             <input x-model="yearlySavings" type="text" class="form-control" id="yearlySavings" disabled>
             <label for="yearlySavings">Ετήσιο ποσό αποταμίευσης σε € (χωρίς τόκους)</label>
-        </div>
+        </div> -->
         <div class="form-floating">
             <input x-model="totalSavings" type="text" class="form-control" id="totalSavings" disabled>
             <label for="totalSavings">Συνολικό ποσό αποταμίευσης (χωρίς τόκους)</label>
         </div>
         <div class="form-floating border border-1 border-primary">
-            <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValueShow" disabled>
-            <label for="futureValueShow">Τελικό ποσό που θα έχει συσσωρευτεί</label>
+            <input x-model="euro(futureCapital())" type="text" class="form-control" id="futureCapital" disabled>
+            <label for="futureCapital">Τελικό κεφάλαιο που θα έχει συσσωρευτεί</label>
         </div>
-
+        <div x-cloak x-show="useInflation" class="form-floating">
+            <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValue" disabled>
+            <label for="futureValue">Σημερινή αξία τελικού κεφαλαίου (λόγω πληθωρισμού)</label>
+        </div>
 
 
         <hr>
         <h2>Κατανάλωση</h2>
         <div class="form-floating ">
             <input x-model.number="totalNominalExpenses" type="number" class="form-control" id="totalNominalExpenses" min="0" step="20">
-            <label for="totalNominalExpenses">Μηνιαία έξοδα σε € <span x-show="useInflation">(με σημερινή αξία)</span> κατά την περίοδο συνταξιοδότησης </label>
+            <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα κατά την περίοδο συνταξιοδότησης σε € <span x-show="useInflation">με σημερινή αξία</span> </label>
         </div>
         <div x-cloak x-show="useInflation" class="form-floating" >
             <input x-model="Math.ceil(totalExpenses())" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
-            <label for="totalExpenses">Μηνιαία έξοδα σε € <span x-show="useInflation">(με μελλοντική αξία) κατά την περίοδο συνταξιοδότησης </span></label>
+            <label for="totalExpenses">Μηνιαία ονομαστικά έξοδα στην αρχή της συνταξιοδότησης σε € με μελλοντική αξία </label>
         </div>
         <div class="form-floating">
             <input x-model.number="pension" type="number" class="form-control" id="pension" min="0" step="20">

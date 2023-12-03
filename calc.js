@@ -60,7 +60,7 @@ function nper(rate,pmt,pv,fv=0,type=0) {
 finance.nper = nper;
 
 function periodDescription(months){
-    if (months=="Infinity") {return "Για πάντα"};
+    if (months==-Infinity || months==Infinity) {return "Για πάντα"};
     months = parseInt(months);
     // console.log(months);
     let years = Math.floor(months/12);
@@ -81,6 +81,7 @@ function amountByPeriod(rate,nper,pmt,pv=0,type=0){
     pv = parseFloat(pv);
     type = parseInt(type);
     let amounts = [];
+    amounts[0] = euro(-pv);
 
     for (let i=1; i<=nper; i++){
         amounts[i] = euro(Math.abs(finance.FV(rate,i,pmt,pv,type)));
