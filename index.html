@@ -112,7 +112,7 @@
         <div x-cloak x-show="useInflation">
             <div class="form-floating">
                 <input x-model.number="inflation" type="number" class="form-control" id="inflation" min="0" max="8" step="0.5">
-                <label for="inflation">Εκτικώμενος μέσος πληθωρισμός %</label>
+                <label for="inflation">Εκτιμώμενος μέσος πληθωρισμός %</label>
             </div>
             <div class="form-floating">
                 <input x-model="percent(interest())" type="text" class="form-control" id="interestShow" disabled>
@@ -132,10 +132,17 @@
             <input x-model.number="years" type="number" class="form-control" id="years" min="0" max="50">
             <label for="years">Έτη αποταμίευσης</label>
         </div>
-        <div class="form-floating">
-            <input x-model.number="monthlySavings" type="number" class="form-control" id="monthlySavings" min="0" step="20">
-            <label for="monthlySavings">Μηνιαίο ποσό αποταμίευσης σε €</label>
+
+        <div class="row">
+            <div class="col-md-6"><div class="form-floating ">
+                <input x-model.number="monthlySavings" type="number" class="form-control" id="monthlySavings" min="0" step="20">
+                <label for="monthlySavings">Μηνιαίο ποσό αποταμίευσης σε €</label>
+            </div></div>
+            <div class="col-md-6 center-contents">
+                <input x-model.number="monthlySavings" type="range" class="form-range bg-light" id="monthlySavingsRange" min="0" step="20" max="500">
+            </div>
         </div>
+
         <div class="form-floating">
             <input x-model="yearlySavings" type="text" class="form-control" id="yearlySavings" disabled>
             <label for="yearlySavings">Ετήσιο ποσό αποταμίευσης σε € (χωρίς τόκους)</label>
