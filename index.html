@@ -16,7 +16,7 @@
     <!-- <script defer src="/resources/script.js?v2.1"></script> -->
     <script defer src="/dim.js"></script>
     <script defer src="/finance.js"></script>
-    <script defer src="/calc.js"></script>
+    <script defer src="/dimfinance.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
@@ -47,14 +47,14 @@
         inflation: 0,
 
         realInterest: function(){
-            return finance.fisherReal(this.nominalInterest,this.inflation);
+            return finance.REALRATE(this.nominalInterest,this.inflation);
         },
         monthlyNominalInterest: function(){
-            return finance.nominal(this.nominalInterest/100,12)/12;
+            return finance.NOMINAL(this.nominalInterest/100,12)/12;
         },
-        monthlyRealInterest: function(){
-            return finance.nominal(this.realInterest()/100,12)/12;
-        },
+        // monthlyRealInterest: function(){
+        //     return finance.NOMINAL(this.realInterest()/100,12)/12;
+        // },
 
         presentValue: 0,
         years: 30,
@@ -86,13 +86,18 @@
         },
         pension: 700,
         expenses: function(){
-            return this.totalExpenses()-this.pension;
+            return Math.max(this.totalExpenses()-this.pension,0);
         },
         monthsCovered: function(){
-            return finance.nper( this.monthlyNominalInterest() , this.expenses() , -this.futureCapital()  );
+            if (this.useInflation){
+                return nPerInflAdj( this.futureCapital() , this.totalExpenses() , this.pension , this.monthlyNominalInterest() , finance.NOMINAL(this.inflation/100,12)/12 );
+            }else{
+                return finance.NPER( this.monthlyNominalInterest() , this.expenses() , -this.futureCapital()  );
+            }
         },
         coveredPeriod: function(){
             return periodDescription(this.monthsCovered());
+            
         },
     }" >
 
@@ -187,7 +192,7 @@
         </div>
         <div class="form-floating">
             <input x-model="euro(expenses())" type="text" class="form-control" id="expenses" disabled>
-            <label for="expenses">Ποσό που θα καταναλώνεται από το προσωπικό πλάνο</label>
+            <label for="expenses">Ποσό που θα καταναλώνεται από το προσωπικό πλάνο <span x-show="useInflation">στην αρχή της συνταξιοδότησης</span></label>
         </div>
         <div class="form-floating border border-1 border-primary">
             <input x-model="coveredPeriod" type="text" class="form-control" id="coveredPeriod" disabled>
