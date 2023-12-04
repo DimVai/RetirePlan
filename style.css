@@ -396,9 +396,21 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
 
 
 
-/*********************  BOOTSTRAP   *********************/
+/*********************  BOOTSTRAP  *********************/
 .form-floating{
     margin-block: 1rem;
 }
 
 [x-cloak] { display: none !important }
+
+
+/*********************     APP     *********************/
+.explanation{
+    font-size: 0.8rem;
+    font-style: italic;
+    color: gray;
+    margin-left: 1rem;
+}
+.hand:hover{
+    cursor: pointer;
+}

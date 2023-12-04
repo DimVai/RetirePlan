@@ -10,6 +10,7 @@
     <link href="/favicon.ico" rel="shortcut icon">
     <meta name="theme-color" content="purple">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <link href="/style.css" rel="stylesheet" media="screen">
 
 
@@ -34,11 +35,13 @@
     <header id="app-header">
         <h1>Υπολογιστής Σύνταξης</h1>
     </header>
+    
 
 
 
 
     <main>
+
 
 
     <div x-data="{
@@ -111,13 +114,13 @@
             <input x-model.boolean="useInflation" class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
                 @change="if (useInflation) { 
                         inflation = 2; 
-                        totalNominalExpenses=700;
-                        /*nominal+=2;*/
+                        totalNominalExpenses=800;
+                        /*nominalInterest+=2;*/
                     } 
                     else { 
                         totalNominalExpenses=1200;
                         inflation = 0;
-                        /*nominal-=2;*/
+                        /*nominalInterest-=2;*/
                     }"
             >
             <label class="form-check-label" for="flexCheckDefault">
@@ -134,18 +137,18 @@
                 <label for="realInterest">Εκτιμώμενο μέσο πραγματικό επιτόκιο</label>
             </div>
         </div>
-
         
         <hr>
 
         <h2>Αποταμίευση</h2>
         <div class="form-floating">
             <input x-model.number="presentValue" type="number" class="form-control" id="presentValue" min="0" step="500">
-            <label for="presentValue">Διαθέσιμο ποσό σε € σήμερα</label>
+            <label for="presentValue">Διαθέσιμο αποταμιευμένο ποσό σε € σήμερα</label>
         </div>
-        <div class="form-floating">
+        <div class="form-floating" >
             <input x-model.number="years" type="number" class="form-control" id="years" min="0" max="50">
-            <label for="years">Έτη αποταμίευσης</label>
+            <label for="years">Έτη τακτικής αποταμίευσης που απομένουν
+            </label>
         </div>
 
         <div class="row">
@@ -157,6 +160,7 @@
                 <input x-model.number="monthlySavings" type="range" class="form-range bg-light" id="monthlySavingsRange" min="0" step="20" max="500">
             </div>
         </div>
+
 
         <!-- <div class="form-floating">
             <input x-model="yearlySavings" type="text" class="form-control" id="yearlySavings" disabled>
@@ -172,7 +176,7 @@
         </div>
         <div x-cloak x-show="useInflation" class="form-floating">
             <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValue" disabled>
-            <label for="futureValue">Σημερινή αξία τελικού κεφαλαίου (λόγω πληθωρισμού)</label>
+            <label for="futureValue">Αγοραστική αξία συσσωρευμένου κεφαλαίου "σε σημερινά χρήματα" (λόγω πληθωρισμού)</label>
         </div>
 
 
@@ -197,6 +201,19 @@
         <div class="form-floating border border-1 border-primary">
             <input x-model="coveredPeriod" type="text" class="form-control" id="coveredPeriod" disabled>
             <label for="coveredPeriod">Περίοδος κάλυψης</label>
+        </div>
+
+        <div x-show="useInflation" x-data="{open: false}" class="explanation">
+            <div @click="open=true" class="hand">Λεπτομέρειες για τον υπολογισμό της περιόδου κάλυψης</div>
+            <div x-show="open">Λαμβάνονται υπόψη τα εξής: 
+                Με βάση τα υπολογιζόμενα έξοδα με σημερινή αξία (<span x-text="euro(totalNominalExpenses)"></span>), 
+                υπολογίζεται ότι την πρώτη περίοδο της συνταξιοδότησης θα απαιτηθούν <span x-text="euro(totalExpenses())"></span>, λόγω του πληθωρισμού.
+                Για κάθε επόμενο μήνα, τα μηνιαία έξοδα θα αυξάνονται σύμφωνα με τον (μηνιαίο) πληθωρισμό.
+                Από αυτά, ένα σταθερό μέρος θα καλύπτεται από την κρατική σύνταξη (<span x-text="euro(pension)"></span>) και το υπόλοιπο μέρος
+                θα καλύπτεται από το προσωπικό πλάνο αποταμίευσης (το οποίο τον πρώτο μήνα θα είναι 
+                <span x-text="euro(totalExpenses())"></span> - <span x-text="euro(pension)"></span> = <span x-text="euro(expenses())"></span>). 
+                Αφού τα χρήματα αυτά ληφθούν από το κεφάλαιο, τα κεφάλαιο που θα απομείνει θα τοκιστεί σύμφωνα με το επιτόκιο.
+            </div>
         </div>
 
 

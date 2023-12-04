@@ -78,7 +78,8 @@ finance.NPER = nper;    // overrides the function NPER from finance.js
 
 
 
-/** An alternative NPER function that incorporates the inflation in the payment in every period. Used to calculate number of withdrawals from a saved capital.
+/** 
+ * An alternative NPER function that incorporates the inflation in the payment in every period. Used to calculate number of withdrawals from a saved capital.
  * Withdrawals are assumed to be made during the period before the period's interest is added.
  * Every period, the withdrawal is increased by the inflation rate, and the remaining capital is decreased by the withdrawal and increased by the interest rate.
  */
@@ -102,7 +103,9 @@ let nPerInfl = function(pv,expenses,rate,inflation=0,fv=0){
 };
 finance.NPERINFLATED = nPerInfl;
 
-
+/**
+ * An adjusted nPerInfl function that takes into account the standard income that is expected to be received every period.
+ */
 let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
     if (inflation==0) {return finance.NPER(rate,expenses,pv,fv)};
     rate = parseFloat(rate);
