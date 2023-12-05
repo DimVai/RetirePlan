@@ -409,8 +409,13 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
     font-size: 0.8rem;
     font-style: italic;
     color: gray;
-    margin-left: 1rem;
+    margin-left: 2rem;
 }
 .hand:hover{
     cursor: pointer;
+}
+
+.form-control::placeholder {
+    color: lightgray;
+    font-style: italic;
 }

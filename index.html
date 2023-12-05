@@ -190,22 +190,36 @@
             <input x-model="Math.ceil(totalExpenses())" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
             <label for="totalExpenses">Μηνιαία ονομαστικά έξοδα στην αρχή της συνταξιοδότησης σε € με μελλοντική αξία </label>
         </div>
-        <div class="form-floating">
+        <div class="form-floating mb-1">
             <input x-model.number="pension" type="number" class="form-control" id="pension" min="0" step="20">
             <label for="pension">Μηνιαία κρατική σύνταξη σε €</label>
         </div>
+        <div x-data="{open:false}" class="explanation">
+            <div @click="open=true" class="hand" x-show="!open">Δεν ξέρω ποια θα είναι η κρατική μου σύνταξη</div>
+            <div x-show="open">
+                Ο ακριβής υπολογισμός είναι αρκετά σύνθετος και εξαρτάται από πολλούς παράγοντες, όπως τα έτη της ασφάλισης, το εισόδημα και την ηλικία συνταξιοδότησης.
+                Για μια προσέγγιση, εισαγάγετε τις κατά μέσο όρο ετήσιες μικτές αποδοχές σε € παρακάτω και πατήστε το αντίστοιχο κουμπί.
+                <div class="input-group my-1">
+                    <input x-model.number="grossIncome" @keyup.enter="$refs.pensionSubmit.click()" type="number" class="form-control" id="grossIncome" min="0" step="1000"  placeholder="14000">
+                    <button x-ref="pensionSubmit" @click="if(grossIncome>0&&confirmPension()){pension=Math.floor(grossIncome*0.4*0.9/12+320)}else{pension=0}" class="btn btn-outline-secondary" type="button">Συμπλήρωση κρατικής σύνταξης κατά προσέγγιση</button>
+                </div>
+            </div>
+        </div>
+
+
         <div class="form-floating">
             <input x-model="euro(expenses())" type="text" class="form-control" id="expenses" disabled>
             <label for="expenses">Ποσό που θα καταναλώνεται από το προσωπικό πλάνο <span x-show="useInflation">στην αρχή της συνταξιοδότησης</span></label>
         </div>
-        <div class="form-floating border border-1 border-primary">
+        <div class="form-floating mb-1 border border-1 border-primary">
             <input x-model="coveredPeriod" type="text" class="form-control" id="coveredPeriod" disabled>
             <label for="coveredPeriod">Περίοδος κάλυψης</label>
         </div>
 
         <div x-show="useInflation" x-data="{open: false}" class="explanation">
             <div @click="open=true" class="hand">Λεπτομέρειες για τον υπολογισμό της περιόδου κάλυψης</div>
-            <div x-show="open">Λαμβάνονται υπόψη τα εξής: 
+            <div x-show="open" x-transition>
+                Λαμβάνονται υπόψη τα εξής: 
                 Με βάση τα υπολογιζόμενα έξοδα με σημερινή αξία (<span x-text="euro(totalNominalExpenses)"></span>), 
                 υπολογίζεται ότι την πρώτη περίοδο της συνταξιοδότησης θα απαιτηθούν <span x-text="euro(totalExpenses())"></span>, λόγω του πληθωρισμού.
                 Για κάθε επόμενο μήνα, τα μηνιαία έξοδα θα αυξάνονται σύμφωνα με τον (μηνιαίο) πληθωρισμό.
@@ -227,18 +241,15 @@
 
 
 
-
-
-
-
-        <hr>
-
-
     </main>
 
 
 
     <footer>
+        <hr class="my-0">
+        <div class="center-contents">
+            <p>© <script>document.write((new Date()).getFullYear())</script> Δημήτρης Βαϊνανίδης</p>
+        </div>
 
     </footer>
 

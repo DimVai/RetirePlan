@@ -18,7 +18,9 @@ finance from finance.js has the following functions:
 
 
 
-// show/formatting functions
+////////////////////////////// FORMATTING FUNCTION
+
+
 function percent(number,decimals=2) {
     return (number * 100).toFixed(decimals) + '%';
 }
@@ -35,7 +37,7 @@ function euro(number) {
     }).format(number);
   }
 
-
+//////////////////////////// ENHANCING FINANCE.JS
 
 /** Calculates the real interest rate using the nominal rate and the inflation, according to Fisher's formula */
 let fisherReal = function(nominal,inflation) {
@@ -54,6 +56,12 @@ let nominal = function(effect_rate,npery) {
     return nominal;
 }
 finance.NOMINAL = nominal;
+
+let effectiveRate = function(nominal_rate,npery){
+    nominal_rate = parseFloat(nominal_rate);
+    return Math.pow(1+nominal_rate/npery,npery)-1;
+}
+finance.EFFECT = effectiveRate;
 
 /** Calculates the number of periods required to reach a specific fv amount with initial capital pv and a payment of pmt every period  */
 let nper = function(rate,pmt,pv,fv=0,type=0){
@@ -163,4 +171,10 @@ function amountByPeriod(rate,nper,pmt,pv=0,type=0){
     return amounts;
 }
 
+let confirmPension = function(){
+    if (confirm('Παρακαλώ επιβεβαιώστε: "Αντιλαμβάνομαι ότι ο υπολογισμός της κρατικής σύνταξης θα γίνει κατά προσέγγιση και μπορεί να απέχει πολύ από την πραγματική"'))
+        {return true}
+    else
+        {return false}
+};
 
