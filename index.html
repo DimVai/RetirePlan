@@ -273,7 +273,7 @@
 
 
 
-        <div x-data="{open:false}" class="explanation">
+        <div x-show="useInflation" x-data="{open:false}" class="explanation">
             <div @click="open=!open" class="hand">Θέλω να δω αναλυτικά το κεφάλαιο που απομένει ανά μήνα</div>
             <template x-if="open">
                 <div x-cloak x-transition x-show="open" >
