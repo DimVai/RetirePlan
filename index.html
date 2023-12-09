@@ -33,7 +33,7 @@
     <div class="body-container">
 
     <header id="app-header">
-        <h1>Υπολογιστής Σύνταξης</h1>
+        <h1><a href="/">Υπολογιστής Σύνταξης</a></h1>
     </header>
     
 
@@ -46,50 +46,39 @@
 
     <div x-data="{
         useInflation: false,
-        nominalInterest: 4,
+        effectiveInterest: 4,
         inflation: 0,
 
         realInterest: function(){
-            return finance.REALRATE(this.nominalInterest,this.inflation);
+            return finance.REALRATE(this.effectiveInterest,this.inflation);
         },
-        monthlyNominalInterest: function(){
-            return finance.NOMINAL(this.nominalInterest/100,12)/12;
+        monthlyInterest: function(){
+            return finance.PERIODRATE(this.effectiveInterest/100,12);
         },
-        // monthlyRealInterest: function(){
-        //     return finance.NOMINAL(this.realInterest()/100,12)/12;
-        // },
 
         presentValue: 0,
         years: 30,
         monthlySavings: 150,
-        yearlySavings: function(){
-            return this.monthlySavings * 12;
-        },
         totalSavings: function(){
-            return euro(this.yearlySavings()*this.years);
+            return euro(this.monthlySavings*12*this.years);
         },
 
         futureCapital: function(){
-            return -finance.FV( this.monthlyNominalInterest() , 12*this.years , this.monthlySavings , this.presentValue );
+            return finance.FV( this.monthlyInterest() , 12*this.years , -this.monthlySavings , this.presentValue );
         },
         inflationFactor: function(){
             return Math.pow(1+this.inflation/100,this.years);
         },
-        monthlyInflationFactor: function(month=1){
-            return Math.pow(1+this.inflation/100,month/12);
-        },
+        // monthlyInflationFactor: function(month=1){
+        //     return Math.pow(1+this.inflation/100,month/12);
+        // },
         futureValue: function(){
             return this.futureCapital()/this.inflationFactor();
         },
-        capitalByYear: 0,
-
+        
         totalNominalExpenses: 1200,
         totalExpenses: function(){
-            // if(this.useInflation){
                 return Math.ceil(this.totalNominalExpenses * this.inflationFactor());
-            // }else{
-                // return this.totalNominalExpenses;
-            // }
         },
         pension: 700,
         expenses: function(){
@@ -97,18 +86,20 @@
         },
         monthsCovered: function(){
             if (this.useInflation){
-                return nPerInflAdj( this.futureCapital() , this.totalExpenses() , this.pension , this.monthlyNominalInterest() , finance.NOMINAL(this.inflation/100,12)/12 );
+                return nPerInflAdj( this.futureCapital() , this.totalExpenses() , this.pension , this.monthlyInterest() , finance.PERIODRATE(this.inflation/100,12) );
             }else{
-                return finance.NPER( this.monthlyNominalInterest() , this.expenses() , -this.futureCapital()  );
+                return finance.NPER( this.monthlyInterest() , this.expenses() , -this.futureCapital()  );
             }
         },
+
+        capitalByYear: 0,
         remainingCapitalByMonth: 0,
         coveredPeriod: function(){
             return periodDescription(this.monthsCovered());
-            
         },
-    }"  x-effect="capitalByYear=finance.amountByPeriod( monthlyNominalInterest() , 12*years , -monthlySavings , presentValue );
-                remainingCapitalByMonth=remainingCapitalByPeriod( futureCapital() , totalExpenses() , pension , monthlyNominalInterest() , finance.NOMINAL(inflation/100,12)/12 );
+
+    }"  x-effect="capitalByYear=finance.amountByPeriod( monthlyInterest() , 12*years , -monthlySavings , presentValue );
+                remainingCapitalByMonth=remainingCapitalByPeriod( futureCapital() , totalExpenses() , pension , monthlyInterest() , finance.PERIODRATE(inflation/100,12) );
                 "
 
     >
@@ -116,8 +107,8 @@
         <h2>Επιτόκιο</h2>
 
         <div class="form-floating">
-            <input x-model.number="nominalInterest" type="number" class="form-control" id="nominalInterest" min="0" max="20" step="0.5">
-            <label for="nominalInterest">Εκτιμώμενο μέσο επιτόκιο %</label>
+            <input x-model.number="effectiveInterest" type="number" class="form-control" id="effectiveInterest" min="0" max="20" step="0.5">
+            <label for="effectiveInterest">Εκτιμώμενο μέσο επιτόκιο %</label>
         </div>
         <div class="form-check">
             <!-- το επόμενο @change εκτελείται 2 φορές -->
@@ -125,12 +116,12 @@
                 @change="if (useInflation) { 
                         inflation = 2; 
                         totalNominalExpenses=800;
-                        /*nominalInterest+=2;*/
+                        /*effectiveInterest+=2;*/
                     } 
                     else { 
                         totalNominalExpenses=1200;
                         inflation = 0;
-                        /*nominalInterest-=2;*/
+                        /*effectiveInterest-=2;*/
                     }"
             >
             <label class="form-check-label" for="flexCheckDefault">
@@ -172,10 +163,6 @@
         </div>
 
 
-        <!-- <div class="form-floating">
-            <input x-model="yearlySavings" type="text" class="form-control" id="yearlySavings" disabled>
-            <label for="yearlySavings">Ετήσιο ποσό αποταμίευσης σε € (χωρίς τόκους)</label>
-        </div> -->
         <div class="form-floating">
             <input x-model="totalSavings" type="text" class="form-control" id="totalSavings" disabled>
             <label for="totalSavings">Συνολικό ποσό αποταμίευσης (χωρίς τόκους)</label>

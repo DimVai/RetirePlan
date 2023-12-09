@@ -19,6 +19,7 @@ finance from finance.js has the following functions:
     REALRATE(nominal,inflation)
     NOMINAL(effect_rate,npery)
     EFFECT(nominal_rate,npery)
+    PERIODRATE(rate,npery,rateIsNominal=false)
     NPER(rate,pmt,pv,fv=0,type=0) // I override this function
     NPERINFLATED(pv,expenses,rate,inflation,fv)
 */
@@ -56,20 +57,29 @@ let fisherReal = function(nominal,inflation) {
 }
 finance.REALRATE = fisherReal;
 
-/** Calculates the nominal annual interest rate given the effective annual rate */
-let nominal = function(effect_rate,npery) {
-    effect_rate = parseFloat(effect_rate);
-    npery = parseInt(npery);
-    let nominal = (Math.pow(1+effect_rate,1/npery)-1)*npery;
-    return nominal;
-}
-finance.NOMINAL = nominal;
-
+/** Calculates the effective annual interest rate given the nominal annual rate */
 let effectiveRate = function(nominal_rate,npery){
     nominal_rate = parseFloat(nominal_rate);
     return Math.pow(1+nominal_rate/npery,npery)-1;
 }
 finance.EFFECT = effectiveRate;
+
+/** Calculates the nominal annual interest rate given the effective annual rate */
+let nominal = function(effect_rate,npery) {
+    let rate = parseFloat(effect_rate);
+    npery = parseInt(npery);
+    return (Math.pow(1+rate,1/npery)-1)*npery;
+}
+finance.NOMINAL = nominal;
+
+/** Calculates the interest rate per period given the effective annual rate and the number of periods per year */
+let periodRate = function(rate,npery,rateIsNominal=false){
+    rate = parseFloat(rate);
+    npery = parseInt(npery);
+    if (rateIsNominal) {return rate/npery};
+    return Math.pow(1+rate,1/npery)-1;
+};
+finance.PERIODRATE = periodRate;
 
 /** Calculates the number of periods required to reach a specific fv amount with initial capital pv and a payment of pmt every period  */
 let nper = function(rate,pmt,pv,fv=0,type=0){
@@ -145,6 +155,7 @@ let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
     return nper-1;
 };
 
+/** Is used to populate the table during the retirement phase */
 let remainingCapitalByPeriod = function(pv,expenses,standardIncome=0,rate,inflation=0,fv=0){
     // console.log("remainingCapitalByPeriod",pv,expenses,standardIncome,rate,inflation,fv);
     rate = parseFloat(rate);
@@ -212,6 +223,7 @@ function amountByPeriod(rate,nper,pmt,pv=0,type=0){
 }
 finance.amountByPeriod = amountByPeriod;
 
+/** Επιβεβαίωση ότι η σύνταξη γίνεται κατά προσέγγιση */
 let confirmPension = function(){
     if (confirm('Παρακαλώ επιβεβαιώστε: "Αντιλαμβάνομαι ότι ο υπολογισμός της κρατικής σύνταξης θα γίνει κατά προσέγγιση και μπορεί να απέχει πολύ από την πραγματική"'))
         {return true}
