@@ -14,6 +14,13 @@ finance from finance.js has the following functions:
     IRR(values, guess)
     IPMT(rate, per, nper, pv, fv, type)
     PPMT(rate, per, nper, pv, fv, type)
+
+    // New functions
+    REALRATE(nominal,inflation)
+    NOMINAL(effect_rate,npery)
+    EFFECT(nominal_rate,npery)
+    NPER(rate,pmt,pv,fv=0,type=0) // I override this function
+    NPERINFLATED(pv,expenses,rate,inflation,fv)
 */
 
 
@@ -29,6 +36,7 @@ function decimal(number,decimals=0) {
 }
 function euro(number) {
     number = parseFloat(number);
+    if (isNaN(number)) {return "-"}
     return new Intl.NumberFormat('el-GR', {
       style: 'currency',
       currency: 'EUR',
@@ -115,6 +123,7 @@ finance.NPERINFLATED = nPerInfl;
  * An adjusted nPerInfl function that takes into account the standard income that is expected to be received every period.
  */
 let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
+    // console.log("nPerInflAdj",pv,expenses,standardIncome,rate,inflation,fv);
     if (inflation==0) {return finance.NPER(rate,expenses,pv,fv)};
     rate = parseFloat(rate);
     let stdInc = parseFloat(standardIncome);
@@ -122,6 +131,7 @@ let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
     let remainingCapital = parseFloat(pv);
     fv = parseFloat(fv);
     inflation = parseFloat(inflation);
+
     let nper = 0;
     while (remainingCapital>fv && nper<12*100) {
         let currentPmt = Math.max(expenses*(1+inflation)**nper-stdInc,0);
@@ -130,8 +140,38 @@ let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
         remainingCapital *= (1+rate); 
         nper++;
     }
+    // console.log(nper);
     if (nper+1>12*100) {return Infinity};
     return nper-1;
+};
+
+let remainingCapitalByPeriod = function(pv,expenses,standardIncome=0,rate,inflation=0,fv=0){
+    // console.log("remainingCapitalByPeriod",pv,expenses,standardIncome,rate,inflation,fv);
+    rate = parseFloat(rate);
+    expenses = parseFloat(expenses);
+    let stdInc = parseFloat(standardIncome);
+    let remainingCapital = parseFloat(pv);
+    fv = parseFloat(fv);
+    inflation = parseFloat(inflation);
+
+    let period = 0;
+    let periods = [];
+    let expensesByPeriod = ["-"];
+    let interestByPeriod = ["-"];
+    let remainingCapitals = [remainingCapital];
+
+    while (remainingCapital>fv && period<12*50) {
+        periods.push(period);
+        let currentPmt = Math.max(expenses*(1+inflation)**period-stdInc,0);
+        expensesByPeriod.push(currentPmt);
+        remainingCapital -= currentPmt; 
+        interestByPeriod.push(rate*remainingCapital);
+        remainingCapital *= (1+rate); 
+        remainingCapitals.push(remainingCapital);
+        period++;
+    }
+    // console.log(period-1); // period-1 is the number of periods
+    return {periods,expensesByPeriod,interestByPeriod,remainingCapitals};
 };
 
 
@@ -170,6 +210,7 @@ function amountByPeriod(rate,nper,pmt,pv=0,type=0){
 
     return amounts;
 }
+finance.amountByPeriod = amountByPeriod;
 
 let confirmPension = function(){
     if (confirm('Παρακαλώ επιβεβαιώστε: "Αντιλαμβάνομαι ότι ο υπολογισμός της κρατικής σύνταξης θα γίνει κατά προσέγγιση και μπορεί να απέχει πολύ από την πραγματική"'))

@@ -75,9 +75,13 @@
         inflationFactor: function(){
             return Math.pow(1+this.inflation/100,this.years);
         },
+        monthlyInflationFactor: function(month=1){
+            return Math.pow(1+this.inflation/100,month/12);
+        },
         futureValue: function(){
             return this.futureCapital()/this.inflationFactor();
         },
+        capitalByYear: 0,
 
         totalNominalExpenses: 1200,
         totalExpenses: function(){
@@ -98,11 +102,16 @@
                 return finance.NPER( this.monthlyNominalInterest() , this.expenses() , -this.futureCapital()  );
             }
         },
+        remainingCapitalByMonth: 0,
         coveredPeriod: function(){
             return periodDescription(this.monthsCovered());
             
         },
-    }" >
+    }"  x-effect="capitalByYear=finance.amountByPeriod( monthlyNominalInterest() , 12*years , -monthlySavings , presentValue );
+                remainingCapitalByMonth=remainingCapitalByPeriod( futureCapital() , totalExpenses() , pension , monthlyNominalInterest() , finance.NOMINAL(inflation/100,12)/12 );
+                "
+
+    >
 
         <h2>Επιτόκιο</h2>
 
@@ -111,6 +120,7 @@
             <label for="nominalInterest">Εκτιμώμενο μέσο επιτόκιο %</label>
         </div>
         <div class="form-check">
+            <!-- το επόμενο @change εκτελείται 2 φορές -->
             <input x-model.boolean="useInflation" class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
                 @change="if (useInflation) { 
                         inflation = 2; 
@@ -179,6 +189,36 @@
             <label for="futureValue">Αγοραστική αξία συσσωρευμένου κεφαλαίου "σε σημερινά χρήματα" (λόγω πληθωρισμού)</label>
         </div>
 
+        <div x-data="{open:false}" class="explanation">
+            <div @click="open=!open" class="hand">Θέλω να δω αναλυτικά το κεφάλαιο ανά έτος</div>
+            <!-- <template x-if="open"> -->
+                <div x-cloak x-transition x-show="open">
+                    <div class="my-1">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Έτος</th>
+                                    <th>Αποταμίευση</th>
+                                    <th>Κεφάλαιο</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="year in years">
+                                    <tr>
+                                        <td><span x-text="year"></span></td>
+                                        <td><span x-text="euro(12*monthlySavings*year)"></span></td>
+                                        <td><span x-text="capitalByYear[year*12] "></span></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <div class="text-end">Στον παραπάνω πίνακα, θεωρούμε αποταμίευση και ανατοκισμό σε μηνιαία βάση.</div>
+                    </div>
+                </div>
+            <!-- </template> -->
+        </div>
+
+
 
         <hr>
         <h2>Κατανάλωση</h2>
@@ -194,13 +234,13 @@
             <input x-model.number="pension" type="number" class="form-control" id="pension" min="0" step="20">
             <label for="pension">Μηνιαία κρατική σύνταξη σε €</label>
         </div>
-        <div x-data="{open:false}" class="explanation">
+        <div x-data="{open:false, grossIncome:14000}" class="explanation">
             <div @click="open=true" class="hand" x-show="!open">Δεν ξέρω ποια θα είναι η κρατική μου σύνταξη</div>
             <div x-show="open">
                 Ο ακριβής υπολογισμός είναι αρκετά σύνθετος και εξαρτάται από πολλούς παράγοντες, όπως τα έτη της ασφάλισης, το εισόδημα και την ηλικία συνταξιοδότησης.
                 Για μια προσέγγιση, εισαγάγετε τις κατά μέσο όρο ετήσιες μικτές αποδοχές σε € παρακάτω και πατήστε το αντίστοιχο κουμπί.
                 <div class="input-group my-1">
-                    <input x-model.number="grossIncome" @keyup.enter="$refs.pensionSubmit.click()" type="number" class="form-control" id="grossIncome" min="0" step="1000"  placeholder="14000">
+                    <input x-model.number="grossIncome" @keyup.enter="$refs.pensionSubmit.click()" type="number" class="form-control" id="grossIncome" min="0" step="1000" placeholder="14000">
                     <button x-ref="pensionSubmit" @click="if(grossIncome>0&&confirmPension()){pension=Math.floor(grossIncome*0.4*0.9/12+320)}else{pension=0}" class="btn btn-outline-secondary" type="button">Συμπλήρωση κρατικής σύνταξης κατά προσέγγιση</button>
                 </div>
             </div>
@@ -228,6 +268,50 @@
                 <span x-text="euro(totalExpenses())"></span> - <span x-text="euro(pension)"></span> = <span x-text="euro(expenses())"></span>). 
                 Αφού τα χρήματα αυτά ληφθούν από το κεφάλαιο, τα κεφάλαιο που θα απομείνει θα τοκιστεί σύμφωνα με το επιτόκιο.
             </div>
+        </div>
+
+
+
+
+        <div x-data="{open:false}" class="explanation">
+            <div @click="open=!open" class="hand">Θέλω να δω αναλυτικά το κεφάλαιο που απομένει ανά μήνα</div>
+            <template x-if="open">
+                <div x-cloak x-transition x-show="open" >
+                    <div class="my-1">
+                    <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Έτος</th>
+                                    <th>Μήνας</th>
+                                    <!-- <th>period</th> -->
+                                    <th>Έξοδα</th>
+                                    <th>Τόκοι</th>
+                                    <th>Κεφάλαιο</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td><span x-text="euro(futureCapital())"></span></td>
+                                </tr>
+                                <template x-for="month in Math.min(12*50,monthsCovered())">
+                                    <tr>
+                                        <td><span x-text="Math.floor(month/12)"></span></td>
+                                        <td><span x-text="month%12"></span></td>
+                                        <!-- <td><span x-text="remainingCapitalByMonth.periods[month]"></span></td> -->
+                                        <td><span x-text="euro(remainingCapitalByMonth.expensesByPeriod[month])"></span></td>
+                                        <td><span x-text="euro(remainingCapitalByMonth.interestByPeriod[month])"></span></td>
+                                        <td><span x-text="euro(remainingCapitalByMonth.remainingCapitals[month])"></span></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                    </table>
+                    </div>
+                </div>
+            </template>
         </div>
 
 
