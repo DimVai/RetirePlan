@@ -396,9 +396,12 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
 
 
 
-/*********************  BOOTSTRAP  *********************/
+/*********************  BOOTSTRAP ALPINE  *********************/
 .form-floating{
     margin-block: 1rem;
+}
+.form-check-label{
+    cursor: pointer;
 }
 
 [x-cloak] { display: none !important }
@@ -413,6 +416,10 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
 }
 .hand:hover{
     cursor: pointer;
+    text-decoration: underline;
+}
+.hand.active{
+    color: MediumBlue ;
 }
 
 .form-control::placeholder {

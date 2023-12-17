@@ -108,3 +108,15 @@ window.customElements.define('question-icon',QuestionIcon);
 // enable bootstrap tooltips
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+
+// declare what x-bind="openButton" should add to the html element:
+// type="button" @click="open=!open" class="hand" :class="open?'active':''"
+// class and :class attributes are not BOTH supported!
+document.addEventListener('alpine:init', () => {
+    Alpine.bind('openButton', () => ({
+        'type': "button", 
+        '@click': "open=!open",
+        ':class': " open ? 'hand active' : 'hand' ",
+    }))
+})
