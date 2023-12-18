@@ -73,7 +73,7 @@ var dimFetch = async (URL,property=null) => {      // property for result object
 /* returns the array's unique values */
 window.unique = (arr) => [...new Set(arr)];
 
-
+Q('.thisYear').set(new Date().getFullYear());
 
 
 ///////////////////    BOOTSTRAP CUSTOM COMPONENTS    //////////////////

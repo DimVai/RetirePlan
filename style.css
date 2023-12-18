@@ -75,7 +75,7 @@ a{
     text-decoration: none;
     box-shadow: none;
     transition: all 0.3s; 
-    font-weight: bold;
+    /* font-weight: bold; */
     color: darkblue;
 }
 a:hover{color: hwb(180 10% 81%)}
