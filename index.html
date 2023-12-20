@@ -211,7 +211,7 @@
         <h2>Κατανάλωση (συναξιοδότηση)</h2>
         <div class="form-floating ">
             <input x-model.number="totalNominalExpenses" type="number" class="form-control" id="totalNominalExpenses" min="0" step="20">
-            <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα <span class="hide-in-sm">την περίοδο συνταξιοδότησης</span> σε € <span x-show="useInflation" class="hide-in-sm">με σημερινή αξία</span> </label>
+            <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα <span class="hide-in-sm">την περίοδο συνταξιοδότησης</span> σε <span x-show="useInflation" class="show-in-sm">"σημερινά"</span> € <span x-show="useInflation" class="hide-in-sm">με σημερινή αξία</span> </label>
         </div>
         <div x-cloak x-show="useInflation" class="form-floating" >
             <input x-model="Math.ceil(totalExpenses())" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
