@@ -173,7 +173,7 @@
         </div>
         <div x-cloak x-show="useInflation" class="form-floating">
             <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValue" disabled>
-            <label for="futureValue">Αγοραστική αξία συσσωρευμένου κεφαλαίου "σε σημερινά χρήματα" (λόγω πληθωρισμού)</label>
+            <label for="futureValue">Αγοραστική αξία συσσωρευμένου κεφαλαίου <span class="hide-in-sm">"σε σημερινά χρήματα" (λόγω πληθωρισμού)</span></label>
         </div>
 
         <div x-data="{open:false}" class="explanation">
@@ -211,11 +211,11 @@
         <h2>Κατανάλωση (συναξιοδότηση)</h2>
         <div class="form-floating ">
             <input x-model.number="totalNominalExpenses" type="number" class="form-control" id="totalNominalExpenses" min="0" step="20">
-            <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα την περίοδο συνταξιοδότησης σε € <span x-show="useInflation">με σημερινή αξία</span> </label>
+            <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα <span class="hide-in-sm">την περίοδο συνταξιοδότησης</span> σε € <span x-show="useInflation" class="hide-in-sm">με σημερινή αξία</span> </label>
         </div>
         <div x-cloak x-show="useInflation" class="form-floating" >
             <input x-model="Math.ceil(totalExpenses())" type="text" class="form-control" id="totalExpenses" min="0" step="20" disabled>
-            <label for="totalExpenses">Μηνιαία ονομαστικά έξοδα στην αρχή της συνταξιοδότησης σε € με μελλοντική αξία </label>
+            <label for="totalExpenses">Μηνιαία ονομαστικά έξοδα <span class="hide-in-sm">στην αρχή της συνταξιοδότησης</span> σε € <span class="hide-in-sm">με μελλοντική αξία </span></label>
         </div>
         <div class="form-floating mb-1">
             <input x-model.number="pension" type="number" class="form-control" id="pension" min="0" step="20">
@@ -236,7 +236,7 @@
 
         <div class="form-floating">
             <input x-model="euro(expenses())" type="text" class="form-control" id="expenses" disabled>
-            <label for="expenses">Ποσό που θα καταναλώνεται από το προσωπικό πλάνο <span x-show="useInflation">στην αρχή της συνταξιοδότησης</span></label>
+            <label for="expenses">Ποσό που θα καταναλώνεται από το <span class="hide-in-sm">προσωπικό</span> πλάνο <span x-show="useInflation" class="hide-in-sm">στην αρχή της συνταξιοδότησης</span></label>
         </div>
         <div class="form-floating mb-1 border border-1 border-primary">
             <input x-model="coveredPeriod" type="text" class="form-control" id="coveredPeriod" disabled>
@@ -261,7 +261,7 @@
 
 
         <div x-show="useInflation" x-data="{open:false}" class="explanation">
-            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο που απομένει ανά μήνα</div>
+            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο που θα απομένει ανά μήνα</div>
             <template x-if="open">
                 <div x-cloak x-transition x-show="open" >
                     <div class="my-1">
@@ -302,7 +302,7 @@
         </div>
 
 
-        <div x-data="{open: false}" class="explanation my-4">
+        <div x-data="{open: false}" class="explanation mt-4">
             <div x-bind="openButton" >Περισσότερες λεπτομέρειες</div>
             <div x-show="open" x-transition>
                 <p>

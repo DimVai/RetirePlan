@@ -426,3 +426,16 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
     color: lightgray;
     font-style: italic;
 }
+
+
+/********************    RESPONSIVE    ********************/
+.hide-in-sm{
+    @media (max-width: 576px) {
+        display: none;
+    }
+}
+.show-in-sm{
+    @media (min-width: 576px) {
+        display: none;
+    }
+}
