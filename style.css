@@ -413,6 +413,11 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
     font-style: italic;
     color: gray;
     margin-left: 2rem;
+    @media (max-width: 576px) {
+        margin-left: 1.5rem;
+        margin-right: 1rem;
+    }
+
 }
 .hand:hover{
     cursor: pointer;

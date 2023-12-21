@@ -173,7 +173,7 @@
         </div>
         <div x-cloak x-show="useInflation" class="form-floating">
             <input x-model="euro(futureValue())" type="text" class="form-control" id="futureValue" disabled>
-            <label for="futureValue">Αγοραστική αξία συσσωρευμένου κεφαλαίου <span class="hide-in-sm">"σε σημερινά χρήματα" (λόγω πληθωρισμού)</span></label>
+            <label for="futureValue">Αγοραστική αξία <span class="hide-in-sm">συσσωρευμένου</span> κεφαλαίου <span class="hide-in-sm">"σε σημερινά χρήματα" (λόγω πληθωρισμού)</span><span x-show="useInflation" class="show-in-sm">σε "σημερινά" €</span></label>
         </div>
 
         <div x-data="{open:false}" class="explanation">
@@ -254,6 +254,7 @@
                 θα καλύπτεται από το προσωπικό πλάνο αποταμίευσης (το οποίο τον πρώτο μήνα θα είναι 
                 <span x-text="euro(totalExpenses())"></span> - <span x-text="euro(pension)"></span> = <span x-text="euro(expenses())"></span>). 
                 Αφού τα χρήματα αυτά ληφθούν από το κεφάλαιο, τα κεφάλαιο που θα απομείνει θα τοκιστεί σύμφωνα με το επιτόκιο.
+                <hr class="my-2">
             </div>
         </div>
 
@@ -297,6 +298,7 @@
                             </tbody>
                     </table>
                     </div>
+                    <hr>
                 </div>
             </template>
         </div>

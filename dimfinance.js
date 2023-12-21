@@ -152,7 +152,7 @@ let nPerInflAdj = function(pv,expenses,standardIncome,rate,inflation=0,fv=0){
     }
     // console.log(nper);
     if (nper+1>12*100) {return Infinity};
-    return nper-1;
+    return Math.max(nper-1,0);
 };
 
 /** Is used to populate the table during the retirement phase */
@@ -192,6 +192,7 @@ let remainingCapitalByPeriod = function(pv,expenses,standardIncome=0,rate,inflat
 /** Ελληνική περιγραφή της διάρκειας, δεδομένου ενός αριθμού μηνών */
 function periodDescription(months){
     if (months==-Infinity || months==Infinity) {return "Για πάντα"};
+    if (months==0) {return "Καθόλου"};
     months = parseInt(months);
     // console.log(months);
     let years = Math.floor(months/12);
