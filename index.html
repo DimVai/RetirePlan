@@ -64,7 +64,7 @@
         },
 
         futureCapital: function(){
-            return finance.FV( this.monthlyInterest() , 12*this.years , -this.monthlySavings , this.presentValue );
+            return finance.FV( this.monthlyInterest() , 12*this.years , -this.monthlySavings , -this.presentValue );
         },
         inflationFactor: function(){
             return Math.pow(1+this.inflation/100,this.years);
@@ -92,13 +92,13 @@
             }
         },
 
-        capitalByYear: 0,
-        remainingCapitalByMonth: 0,
+        capitalByYear: [0],
+        remainingCapitalByMonth: {},
         coveredPeriod: function(){
             return periodDescription(this.monthsCovered());
         },
 
-    }"  x-effect="capitalByYear=finance.amountByPeriod( monthlyInterest() , 12*years , -monthlySavings , presentValue );
+    }"  x-effect="capitalByYear=finance.amountByPeriod( monthlyInterest() , 12*years , -monthlySavings , -presentValue );
                 remainingCapitalByMonth=remainingCapitalByPeriod( futureCapital() , totalExpenses() , pension , monthlyInterest() , finance.PERIODRATE(inflation/100,12) );
                 "
 
