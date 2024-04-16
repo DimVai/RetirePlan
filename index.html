@@ -177,7 +177,7 @@
         </div>
 
         <div x-data="{open:false}" class="explanation">
-            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο ανά έτος</div>
+            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο που θα έχει συσσωρευτεί ανά έτος</div>
             <!-- <template x-if="open"> -->
                 <div x-cloak x-transition x-show="open">
                     <div class="my-1">
@@ -244,7 +244,7 @@
         </div>
 
         <div x-show="useInflation" x-data="{open: false}" class="explanation">
-            <div x-bind="openButton" >Λεπτομέρειες για τον υπολογισμό της περιόδου κάλυψης</div>
+            <div x-bind="openButton" >Τρόπος υπολογισμού της περιόδου κάλυψης</div>
             <div x-show="open" x-transition>
                 Λαμβάνονται υπόψη τα εξής: 
                 Με βάση τα υπολογιζόμενα έξοδα με σημερινή αξία (<span x-text="euro(totalNominalExpenses)"></span>), 
@@ -305,7 +305,7 @@
 
 
         <div x-data="{open: false}" class="explanation mt-4">
-            <div x-bind="openButton" >Περισσότερες λεπτομέρειες</div>
+            <div x-bind="openButton" >Λεπτομέρειες για τους υπολογισμούς</div>
             <div x-show="open" x-transition>
                 <p>
                 Το επιτόκιο ("εκτιμώμενο μέσο επιτόκιο") είναι το ετήσιο αποτελεσματικό επιτόκιο.<br>
