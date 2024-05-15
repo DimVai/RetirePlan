@@ -1,0 +1,30 @@
+{
+    "name": "Πλάνο Αποταμίευσης",
+    "short_name": "Πλάνο Αποταμίευσης",
+    "start_url": "/",
+    "categories": ["finance"],
+    "scope": "/",
+    "display": "standalone",    
+    "background_color": "#630891",
+    "theme_color": "#630891",
+    "description": "Προσωπικό πλάνο αποταμίευσης και συνταξιοδότησης",
+    "orientation": "portrait",
+    "lang": "el-GR",
+    "icons": [
+            {
+            "src": "/pwa/moneybag-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },{
+            "src": "/pwa/moneybag-512-solid.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "splash_pages": [
+        {
+            "src": "/pwa/moneybag-750x1334.png",
+            "sizes": "750x1334"
+          }
+      ]
+}

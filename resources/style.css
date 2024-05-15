@@ -123,6 +123,7 @@ header{
     color: var(--headertextcolor);
     padding: 0.5rem min(3rem,10%);
     border-bottom: 1px solid #e5e5e5;
+    text-align: center;
     height: min(30vw,8rem);   /* Σταθερό μέγεθος για μην πηδάει στο φόρτωμα */
 }
 
