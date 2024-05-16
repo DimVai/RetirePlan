@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "gr.myplan.twa",
+        "sha256_cert_fingerprints": ["74:CF:49:32:7F:EF:FD:BA:59:43:A7:45:D9:40:99:2C:7C:92:E2:70:1D:6B:9A:B3:6F:C7:39:F4:6E:E6:C3:99"]
+      }
+    }]
