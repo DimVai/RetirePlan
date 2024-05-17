@@ -3,6 +3,9 @@
       "target": {
         "namespace": "android_app",
         "package_name": "gr.myplan.twa",
-        "sha256_cert_fingerprints": ["74:CF:49:32:7F:EF:FD:BA:59:43:A7:45:D9:40:99:2C:7C:92:E2:70:1D:6B:9A:B3:6F:C7:39:F4:6E:E6:C3:99"]
+        "sha256_cert_fingerprints": [
+            "74:CF:49:32:7F:EF:FD:BA:59:43:A7:45:D9:40:99:2C:7C:92:E2:70:1D:6B:9A:B3:6F:C7:39:F4:6E:E6:C3:99",
+            "15:3A:DC:16:7F:24:E2:9A:1E:FC:0B:53:1D:CE:78:34:5F:74:73:33:D3:42:67:4D:1F:D2:C2:8E:F7:B7:34:7A"
+        ]
       }
     }]
