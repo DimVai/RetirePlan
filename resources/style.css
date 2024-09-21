@@ -17,7 +17,7 @@
 
 
 
-/* BASIC BOILERPLATE CORRECTIONS */
+/********************* BASIC BOILERPLATE CORRECTIONS *********************/
 
 /* Box sizing rules */
 *,
@@ -43,6 +43,7 @@ dl,
 dd {
   margin: 0;
   padding: 0.5rem 0;
+  text-wrap: balance;
 }
 ol, ul, li{
     margin-block: 0;
@@ -413,6 +414,7 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
     font-size: 0.8rem;
     font-style: italic;
     color: gray;
+    margin-top: 0.4rem;
     margin-left: 2rem;
     @media (max-width: 576px) {
         margin-left: 1.5rem;

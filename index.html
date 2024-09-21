@@ -208,7 +208,7 @@
 
 
         <hr>
-        <h2>Κατανάλωση (συναξιοδότηση)</h2>
+        <h2>Κατανάλωση (συνταξιοδότηση)</h2>
         <div class="form-floating ">
             <input x-model.number="totalNominalExpenses" type="number" class="form-control" id="totalNominalExpenses" min="0" step="20">
             <label for="totalNominalExpenses">Υπολογιζόμενα μηνιαία έξοδα <span class="hide-in-sm">την περίοδο συνταξιοδότησης</span> σε <span x-show="useInflation" class="show-in-sm">"σημερινά"</span> € <span x-show="useInflation" class="hide-in-sm">με σημερινή αξία</span> </label>
@@ -221,13 +221,13 @@
             <input x-model.number="pension" type="number" class="form-control" id="pension" min="0" step="20">
             <label for="pension">Μηνιαία κρατική σύνταξη σε €</label>
         </div>
-        <div x-data="{open:false, grossIncome:14000}" class="explanation">
+        <div x-data="{open:false, grossIncome:16000}" class="explanation">
             <div x-bind="openButton" >Δεν ξέρω ποια θα είναι η κρατική μου σύνταξη</div>
             <div x-cloak x-transition x-show="open">
                 Ο ακριβής υπολογισμός είναι αρκετά σύνθετος και εξαρτάται από πολλούς παράγοντες, όπως τα έτη της ασφάλισης, το εισόδημα και την ηλικία συνταξιοδότησης.
                 Για μια προσέγγιση, εισαγάγετε τις κατά μέσο όρο ετήσιες μικτές αποδοχές σε € παρακάτω και πατήστε το αντίστοιχο κουμπί.
                 <div class="input-group my-1">
-                    <input x-model.number="grossIncome" @keyup.enter="$refs.pensionSubmit.click()" type="number" class="form-control" id="grossIncome" min="0" step="1000" placeholder="14000">
+                    <input x-model.number="grossIncome" @keyup.enter="$refs.pensionSubmit.click()" type="number" class="form-control" id="grossIncome" min="0" step="1000">
                     <button x-ref="pensionSubmit" @click="if(grossIncome>0&&confirmPension()){pension=Math.floor(grossIncome*0.4*0.9/12+320)}else{pension=0}" class="btn btn-outline-secondary" type="button">Συμπλήρωση κρατικής σύνταξης κατά προσέγγιση</button>
                 </div>
             </div>
@@ -340,7 +340,7 @@
 
     <footer>
         <hr class="my-0">
-        <div class="center-contents">
+        <div class="center-contents text-center">
             <p>© 2023-<span class="thisYear"></span> Δημήτρης Βαϊνανίδης</p>
         </div>
 
