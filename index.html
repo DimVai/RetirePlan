@@ -177,31 +177,31 @@
         </div>
 
         <div x-data="{open:false}" class="explanation">
-            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο που θα έχει συσσωρευτεί ανά έτος</div>
+            <span x-bind="openButton" > → Θέλω να δω αναλυτικά το κεφάλαιο που θα έχει συσσωρευτεί ανά έτος</span>
             <!-- <template x-if="open"> -->
-                <div x-cloak x-transition x-show="open">
-                    <div class="my-1">
-                        <table class="table table-striped">
-                            <thead>
+            <div x-cloak x-transition x-show="open">
+                <div class="my-1">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Έτος</th>
+                                <th>Αποταμίευση</th>
+                                <th>Κεφάλαιο</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="year in years">
                                 <tr>
-                                    <th>Έτος</th>
-                                    <th>Αποταμίευση</th>
-                                    <th>Κεφάλαιο</th>
+                                    <td><span x-text="year"></span></td>
+                                    <td><span x-text="euro(12*monthlySavings*year)"></span></td>
+                                    <td><span x-text="capitalByYear[year*12] "></span></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="year in years">
-                                    <tr>
-                                        <td><span x-text="year"></span></td>
-                                        <td><span x-text="euro(12*monthlySavings*year)"></span></td>
-                                        <td><span x-text="capitalByYear[year*12] "></span></td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                        <div class="text-end">Στον παραπάνω πίνακα, θεωρούμε αποταμίευση και ανατοκισμό σε μηνιαία βάση.</div>
-                    </div>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div class="text-end">Στον παραπάνω πίνακα, θεωρούμε αποταμίευση και ανατοκισμό σε μηνιαία βάση.</div>
                 </div>
+            </div>
             <!-- </template> -->
         </div>
 
@@ -222,7 +222,7 @@
             <label for="pension">Μηνιαία κρατική σύνταξη σε €</label>
         </div>
         <div x-data="{open:false, grossIncome:16000}" class="explanation">
-            <div x-bind="openButton" >Δεν ξέρω ποια θα είναι η κρατική μου σύνταξη</div>
+            <span x-bind="openButton" > → Δεν ξέρω ποια θα είναι η κρατική μου σύνταξη</span>
             <div x-cloak x-transition x-show="open">
                 Ο ακριβής υπολογισμός είναι αρκετά σύνθετος και εξαρτάται από πολλούς παράγοντες, όπως τα έτη της ασφάλισης, το εισόδημα και την ηλικία συνταξιοδότησης.
                 Για μια προσέγγιση, εισαγάγετε τις κατά μέσο όρο ετήσιες μικτές αποδοχές σε € παρακάτω και πατήστε το αντίστοιχο κουμπί.
@@ -244,7 +244,7 @@
         </div>
 
         <div x-show="useInflation" x-data="{open: false}" class="explanation">
-            <div x-bind="openButton" >Τρόπος υπολογισμού της περιόδου κάλυψης</div>
+            <span x-bind="openButton" >→ Τρόπος υπολογισμού της περιόδου κάλυψης</span>
             <div x-show="open" x-transition>
                 Λαμβάνονται υπόψη τα εξής: 
                 Με βάση τα υπολογιζόμενα έξοδα με σημερινή αξία (<span x-text="euro(totalNominalExpenses)"></span>), 
@@ -262,7 +262,7 @@
 
 
         <div x-show="useInflation" x-data="{open:false}" class="explanation">
-            <div x-bind="openButton" >Θέλω να δω αναλυτικά το κεφάλαιο που θα απομένει ανά μήνα</div>
+            <span x-bind="openButton" >→ Θέλω να δω αναλυτικά το κεφάλαιο που θα απομένει ανά μήνα</span>
             <template x-if="open">
                 <div x-cloak x-transition x-show="open" >
                     <div class="my-1">
@@ -305,7 +305,7 @@
 
 
         <div x-data="{open: false}" class="explanation mt-4">
-            <div x-bind="openButton" >Λεπτομέρειες για τους υπολογισμούς</div>
+            <span x-bind="openButton" > → Λεπτομέρειες για τους υπολογισμούς</span>
             <div x-show="open" x-transition>
                 <p>
                 Το επιτόκιο ("εκτιμώμενο μέσο επιτόκιο") είναι το ετήσιο αποτελεσματικό επιτόκιο.<br>
@@ -340,7 +340,7 @@
 
     <footer>
         <hr class="my-0">
-        <div class="center-contents text-center">
+        <div class="text-center">
             <p>© 2023-<span class="thisYear"></span> Δημήτρης Βαϊνανίδης</p>
         </div>
 

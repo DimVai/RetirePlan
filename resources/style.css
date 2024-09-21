@@ -43,7 +43,7 @@ dl,
 dd {
   margin: 0;
   padding: 0.5rem 0;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 ol, ul, li{
     margin-block: 0;
@@ -138,7 +138,7 @@ header a:hover{
     color:  hsl(231, 48%, 72%);
 }
 
-footer{padding: 1rem 3rem;}
+footer{padding: 1rem 3rem}
 footer p{font-size: small}
 
 /* Σταθερό μέγεθος για μην πηδάει στο φόρτωμα */
@@ -413,6 +413,7 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
 .explanation{
     font-size: 0.8rem;
     font-style: italic;
+    text-wrap: pretty;
     color: gray;
     margin-top: 0.4rem;
     margin-left: 2rem;
@@ -420,8 +421,12 @@ input[readonly], .input[readonly]:focus, .input[readonly]:active{
         margin-left: 1.5rem;
         margin-right: 1rem;
     }
-
 }
+/* Δεν λειτουργεί καλά σε όλες τις μικρές οθόνες, οπότε το κάνω χειροκίνητα... */
+/* .explanation::before { 
+    content: "→";
+    margin-right: 0.2rem;
+} */
 .hand:hover{
     cursor: pointer;
     text-decoration: underline;
